@@ -1,0 +1,18 @@
+package com.matilda5g.cep.fusionEngine;
+
+import com.matilda5g.cep.fusionEngine.Netdata;
+import com.matilda5g.cep.fusionEngine.PrometheusAlerts;
+import com.matilda5g.cep.fusionEngine.PrometheusData;
+
+declare Netdata
+    @role(event)
+end
+
+declare PrometheusData
+    @role(event)
+end
+
+declare PrometheusAlerts
+    @role(event)
+end
+
