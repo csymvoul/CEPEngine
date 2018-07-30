@@ -12,7 +12,7 @@ public class RulesReader {
             return this.rulesFile;
 
         } catch(NullPointerException e){
-            System.out.println("NullPointerException --> No ");
+            System.out.println("NullPointerException");
             return null;
         }
     }
