@@ -1,10 +1,7 @@
 package com.matilda5g.cep;
 
-import com.matilda5g.cep.fusionEngine.HttpResponseListener;
-import com.matilda5g.cep.fusionEngine.Netdata;
-import com.matilda5g.cep.fusionEngine.RulesReader;
+import com.matilda5g.cep.streamingData.HttpResponseListener;
 import com.matilda5g.cep.streamingData.StreamingData;
-import org.drools.xml.ExtensibleXmlParser;
 import org.json.JSONObject;
 
 /**

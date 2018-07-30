@@ -1,4 +1,4 @@
-package com.matilda5g.cep.fusionEngine;
+package com.matilda5g.cep.streamingData;
 
 import org.json.JSONObject;
 

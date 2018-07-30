@@ -6,7 +6,6 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.matilda5g.cep.fusionEngine.HttpResponseListener;
 import org.json.*;
 import javax.xml.ws.http.HTTPException;
 import java.util.Timer;
