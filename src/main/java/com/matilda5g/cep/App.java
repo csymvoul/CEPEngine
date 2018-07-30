@@ -22,13 +22,9 @@ public class App {
 //        // Print the rulesFile
 //        rulesFile.printRules(rulesFilePath);
 
-        StreamingData netDataStream = new StreamingData("http://83.212.96.238:19999/api/v1/allmetrics?format=json", new HttpResponseListener());
+        StreamingData netDataStream = new StreamingData("http://83.212.96.238:19999/api/v1/allmetrics?format=json");
 
-        try {
-            JSONObject netDataHttpResponse = netDataStream.getHttpResponse();
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
+//        JSONObject netDataHttpResponse = netDataStream.getHttpResponse();
 
 
 //        StreamingData cpuUsageStream = new StreamingData("http://83.212.96.238:9090/api/v1/query?query=(sum(rate(node_cpu[1m]))>0.01)");

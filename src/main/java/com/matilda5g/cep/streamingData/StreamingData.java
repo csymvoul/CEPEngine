@@ -52,9 +52,10 @@ public class StreamingData {
 //        return null;
     }
 
-    public void setHttpResponse(JSONObject httpResponse, HttpResponseListener) {
+    public void setHttpResponse(JSONObject httpResponse) {
         this.httpResponse = httpResponse;
-        System.out.println("this.httpResponse" + this.httpResponse.toString());
+        HttpResponseListener listener = new HttpResponseListener();
+        listener.onResponse(this.httpResponse);
     }
 
     public JSONObject getHttpResponse() {
