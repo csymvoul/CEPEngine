@@ -22,14 +22,16 @@ public class App {
 //        // Print the rulesFile
 //        rulesFile.printRules(rulesFilePath);
 
-        StreamingData netDataStream = new StreamingData("http://83.212.96.238:19999/api/v1/allmetrics?format=json");
+        // Create a StreamingData object with two parameters: (String url, String type), where type can be either NETDATA, PROM, PROMALERTS)
+        StreamingData netDataStream = new StreamingData("http://83.212.96.238:19999/api/v1/allmetrics?format=json", "NETDATA");
+
 
 //        JSONObject netDataHttpResponse = netDataStream.getHttpResponse();
 
 
-//        StreamingData cpuUsageStream = new StreamingData("http://83.212.96.238:9090/api/v1/query?query=(sum(rate(node_cpu[1m]))>0.01)");
+        StreamingData cpuUsageStream = new StreamingData("http://83.212.96.238:9090/api/v1/query?query=(sum(rate(node_cpu[1m]))>0.01)", "PROM");
 
         netDataStream.StreamHttpRequest();
-//        cpuUsageStream.StreamHttpRequest();
+        cpuUsageStream.StreamHttpRequest();
     }
 }

@@ -8,16 +8,21 @@ import java.net.URL;
 
 import org.json.*;
 import javax.xml.ws.http.HTTPException;
+import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import java.util.Calendar;
 
 public class StreamingData {
 
     private String url;
+    private String type;
     private volatile JSONObject httpResponse;
 
-    public StreamingData(String url){
+    public StreamingData(String url, String type){
         this.url = url;
+        this.type = type;
     }
 
     public void httpRequest() throws Exception{
@@ -30,7 +35,7 @@ public class StreamingData {
 
             // the response code of the httpRequest (e.g. 400, 200, etc.)
 //            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
+//            System.out.println("\nSending 'GET' request to URL : " + url);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -52,40 +57,44 @@ public class StreamingData {
 //        return null;
     }
 
-    public void setHttpResponse(JSONObject httpResponse) {
+    public void setHttpResponse(JSONObject httpResponse) throws JSONException {
         this.httpResponse = httpResponse;
         HttpResponseListener listener = new HttpResponseListener();
-        listener.onResponse(this.httpResponse);
+        listener.onResponse(this.httpResponse, this.type);
     }
 
-    public JSONObject getHttpResponse() {
-        System.out.println(this.httpResponse.toString());
-        return this.httpResponse;
-    }
+//    public JSONObject getHttpResponse() {
+//        System.out.println(this.httpResponse.toString());
+//        return this.httpResponse;
+//    }
 
     public void StreamHttpRequest() {
-//        final long timeInterval = 1000;
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
+        final long timeInterval = 5000;
+        Runnable runnable = new Runnable() {
+
+//        final Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
             public void run() {
-                while(true){
+                while (true) {
                     try {
                         httpRequest();
 //                        setHttpResponse(httpResponse);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-//                    try {
-//                        Thread.sleep(timeInterval);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        Thread.sleep(timeInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
-        }, 0, 1000);
+        };
+//        }, 0, 5000);
 
-//        Thread thread = new Thread(runnable);
-//        thread.start();
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }
