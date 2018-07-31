@@ -35,32 +35,40 @@ public class HttpResponseListener {
 
     void onResponse(JSONObject httpResponse, String type) throws JSONException {
         if (type == "PROM"){
-            System.out.println(httpResponse);
+//            System.out.println(httpResponse);
         } else if (type == "NETDATA"){
             // CPU information
             // percentage
-            JSONObject cpuUsage = new JSONObject(httpResponse.getJSONObject("system.cpu"));
+//            System.out.println(httpResponse.getJSONObject("system.cpu").toString());
+            JSONObject cpuUsage = new JSONObject(httpResponse.getJSONObject("system.cpu").toString());
 
             // Memory information
             //MB
-            JSONObject memUsage = new JSONObject(httpResponse.getJSONObject("system.ram"));
+            JSONObject memUsage = new JSONObject(httpResponse.getJSONObject("system.ram").toString());
 
             // Disk information
             // GB
-            JSONObject diskSize = new JSONObject(httpResponse.getJSONObject("disk_space._"));
+            JSONObject diskSize = new JSONObject(httpResponse.getJSONObject("disk_space._").toString());
             // kbps
-            JSONObject diskUsage = new JSONObject(httpResponse.getJSONObject("system.io"));
+            JSONObject diskUsage = new JSONObject(httpResponse.getJSONObject("system.io").toString());
+
 
             // General system information
             //seconds
-            JSONObject upTime = new JSONObject(httpResponse.getJSONObject("system.uptime"));
+            JSONObject upTime = new JSONObject(httpResponse.getJSONObject("system.uptime").toString());
 
             // Networking information
-            JSONObject ipv4RSKbps = new JSONObject(httpResponse.getJSONObject("system.ipv4"));
-            JSONObject ipv4TcpConnsOpen = new JSONObject(httpResponse.getJSONObject("ipv4.tcpopens"));
-            JSONObject ipv4TcpConnsAborts = new JSONObject(httpResponse.getJSONObject("ipv4.tcpconnaborts"));
+            JSONObject ipv4RSKbps = new JSONObject(httpResponse.getJSONObject("system.ipv4").toString());
+            JSONObject ipv4TcpConnsOpen = new JSONObject(httpResponse.getJSONObject("ipv4.tcpopens").toString());
+            JSONObject ipv4TcpConnsAborts = new JSONObject(httpResponse.getJSONObject("ipv4.tcpconnaborts").toString());
 
-            //
+            JSONObject netdataResponse = new JSONObject()
+                    .append("cpuUsage", cpuUsage)
+                    .append("memUsage", memUsage)
+                    .append("sent/received packets", ipv4RSKbps)
+                    .append("uptime", upTime);
+            System.out.println(netdataResponse.toString());
+
 
         }
 
