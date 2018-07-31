@@ -1,5 +1,7 @@
 package com.matilda5g.cep.fusionEngine;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Netdata {
@@ -13,9 +15,10 @@ public class Netdata {
     Need to find out the processes part...
      */
 
-//    public Netdata(JSONObject response){
-//        this.ramUsage = (double) response.get("system.ram")
-//    }
+    public Netdata(JSONObject response) throws JSONException {
+        JSONArray memUsage = response.getJSONArray("memUsage");
+        System.out.println(memUsage.toString());
+    }
     public void printResponse (JSONObject response){
         System.out.println(response.toString());
     }

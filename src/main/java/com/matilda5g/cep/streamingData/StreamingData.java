@@ -69,7 +69,7 @@ public class StreamingData {
 //    }
 
     public void StreamHttpRequest() {
-        final long timeInterval = 1000;
+        final long timeInterval = 5000;
         Runnable runnable = new Runnable() {
 
 //        final Timer timer = new Timer();

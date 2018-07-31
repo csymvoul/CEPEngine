@@ -1,8 +1,10 @@
 package com.matilda5g.cep.streamingData;
 
+import com.matilda5g.cep.fusionEngine.Netdata;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.nio.ch.Net;
 
 public class HttpResponseListener {
 
@@ -54,7 +56,8 @@ public class HttpResponseListener {
                     .append("ipv4TcpConnsAborts", new JSONObject(httpResponse.getJSONObject("ipv4.tcpconnaborts")
                             .toString()))
                     );
-            System.out.println(netdataResponse.toString());
+
+            Netdata netdata = new Netdata(netdataResponse);
 
         }
 
