@@ -39,27 +39,23 @@ public class HttpResponseListener {
         if (type == "PROM"){
 //            System.out.println(httpResponse);
         } else if (type == "NETDATA"){
-            // CPU information
-            // percentage
-//            System.out.println(httpResponse.getJSONObject("system.cpu").toString());
 
+            //create netadata JSON to provide to the netdata object
             JSONObject netdataResponse = new JSONObject()
                     .append("cpuUsage", new JSONObject(httpResponse.getJSONObject("system.cpu").toString()))
                     .append("memUsage", new JSONObject(httpResponse.getJSONObject("system.ram").toString()))
                     .append("diskSize", new JSONObject(httpResponse.getJSONObject("disk_space._").toString()))
-                    .append("diskUsage", new JSONObject(httpResponse.getJSONObject("system.io").toString()))
-
-                    .append("uptime", new JSONObject(httpResponse.getJSONObject("system.uptime").toString())
+                    .append("diskUsage", new JSONObject(httpResponse.getJSONObject("disk_util.vda").toString()))
+                    .append("uptime", new JSONObject(httpResponse.getJSONObject("system.uptime").toString()))
+                    .append("ipv4Packets", new JSONObject(httpResponse.getJSONObject("ipv4.packets").toString()))
                     .append("ipv4RSKbps", new JSONObject(httpResponse.getJSONObject("system.ipv4").toString()))
                     .append("ipv4TcpConnsOpen", new JSONObject(httpResponse.getJSONObject("ipv4.tcpopens")
                             .toString()))
                     .append("ipv4TcpConnsAborts", new JSONObject(httpResponse.getJSONObject("ipv4.tcpconnaborts")
-                            .toString()))
-                    );
+                            .toString()));
 
+            //create netdata object passing netdataResponse JSON
             Netdata netdata = new Netdata(netdataResponse);
-
         }
-
     }
 }
