@@ -8,11 +8,32 @@ declare Netdata
     @role(event)
 end
 
-declare PrometheusData
-    @role(event)
+//declare PrometheusData
+//    @role(event)
+//end
+//
+//declare PrometheusAlerts
+//    @role(event)
+//end
+
+rule "Average CPU over 10%"
+    when
+        #conditions
+        Number ($cpuUsage : doubleValue, doubleValue > 10)
+        from accumulate ( Netdata ($cpu : cpuUsagePerc, $memUsage : memUsagePerc)
+        from entry-point Netdata, average($cpu))
+    then
+        #actions
+        System.out.println("Average CPU usage over 10%");
 end
 
-declare PrometheusAlerts
-    @role(event)
+rule "Average Memory over 10%"
+    when
+        #conditions
+        Number ($memUsage : doubleValue, doubleValue > 10)
+        from accumulate ( Netdata ($mem : memUsagePerc, $cpuUsage : cpuUsagePerc)
+        from entry-point Netdata, average($mem))
+    then
+        #actions
+        System.out.println("Average Memory usage over 10%");
 end
-
