@@ -5,16 +5,8 @@ import com.matilda5g.cep.fusionEngine.PrometheusAlerts;
 import com.matilda5g.cep.fusionEngine.PrometheusData;
 
 declare Netdata
-    @role(event)
+    @role( event )
 end
-
-//declare PrometheusData
-//    @role(event)
-//end
-//
-//declare PrometheusAlerts
-//    @role(event)
-//end
 
 rule "Average CPU over 10%"
     when
@@ -27,13 +19,14 @@ rule "Average CPU over 10%"
         System.out.println("Average CPU usage over 10%");
 end
 
-rule "Average Memory over 10%"
+rule "Average Memory over 1%"
     when
         #conditions
-        Number ($memUsage : doubleValue, doubleValue > 10)
+        Number ($memUsage : doubleValue, doubleValue > 1)
         from accumulate ( Netdata ($mem : memUsagePerc, $cpuUsage : cpuUsagePerc)
         from entry-point Netdata, average($mem))
     then
         #actions
-        System.out.println("Average Memory usage over 10%");
+        System.out.println("Average Memory usage over 1%");
 end
+

@@ -8,23 +8,27 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.conf.EventProcessingOption;
 import org.drools.io.ResourceFactory;
+import org.drools.runtime.KnowledgeSessionConfiguration;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.runtime.conf.ClockTypeOption;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
+import org.drools.time.SessionPseudoClock;
 import org.json.JSONException;
 
 import java.io.*;
+import java.util.Calendar;
 
 public class DroolsFusion {
     private File rulesFile;
     private String path;
 
-    public void droolsFusion(Netdata netdata) throws JSONException{
+    public void droolsFusionSession(Netdata netdata) throws JSONException{
         // KnowledgeBuilder has a collection of DRL files, so our rules can be divided in several files
-        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        KnowledgeBuilder kBuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         File file = getRulesFile();
-        kbuilder.add(ResourceFactory.newFileResource(file.getPath()), ResourceType.DRL);
-        if (kbuilder.hasErrors()){
-            System.out.println(kbuilder.getErrors().toString());
+        kBuilder.add(ResourceFactory.newFileResource(file.getPath()), ResourceType.DRL);
+        if (kBuilder.hasErrors()){
+            System.out.println(kBuilder.getErrors().toString());
         }
 
         // KnowledgeBaseConfiguration is used to set the event processing mode as STREAM
@@ -33,18 +37,35 @@ public class DroolsFusion {
 
         // KnowledgeBase: We created KnowledgeBase considering the connection of DRL files the KnowledgeBuilder has
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
-        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+        kbase.addKnowledgePackages(kBuilder.getKnowledgePackages());
 
-        //StatefulKnowledgeSession: Once we have our KnowledgeBase we create a Session to use it
-        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        // Pseudo Clock Configuration
+        KnowledgeSessionConfiguration conf = KnowledgeBaseFactory.newKnowledgeSessionConfiguration();
+        conf.setOption(ClockTypeOption.get("pseudo"));
 
-        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointNetdata = ksession.getWorkingMemoryEntryPoint("Netdata");
-//        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointStoreTwo = ksession.getWorkingMemoryEntryPoint("StoreTwo");
+//        // StatefulKnowledgeSession: Once we have our KnowledgeBase we create a Session to use it
+        StatefulKnowledgeSession kSession = kbase.newStatefulKnowledgeSession();
+
+//        // If we have the pseudo clock the above code turns into
+//        StatefulKnowledgeSession kSession = kbase.newStatefulKnowledgeSession(conf, null);
+//        SessionPseudoClock clock = kSession.getSessionClock();
+
+        // Create Netdata entry point
+        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointNetdata = kSession.getWorkingMemoryEntryPoint("Netdata");
+
+//        // Create another entry point TODO LIST
+//        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointStoreTwo = kSession.getWorkingMemoryEntryPoint("StoreTwo");
 
         insertEvent(entryPointNetdata, netdata);
-        ksession.fireAllRules();
-        ksession.dispose();
+        kSession.fireAllRules();
+        kSession.dispose();
+        System.out.println();
+
+//        // get the path if the rules file (debug)
 //        System.out.println(getRulesFile().getPath());
+
+//        // print the rules file (debug)
+//        printRules(rulesFile.getPath());
     }
 
     private void insertEvent(org.drools.runtime.rule.WorkingMemoryEntryPoint entryPoint,
