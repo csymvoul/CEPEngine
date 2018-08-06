@@ -8,25 +8,97 @@ declare Netdata
     @role( event )
 end
 
-rule "Average CPU over 10%"
+//rule "Average CPU over 10%"
+//    when
+//        #conditions
+//        Number ($cpuUsage : doubleValue, doubleValue > 10)
+//        from accumulate ( Netdata ($cpu : cpuUsagePerc, $memUsage : memUsagePerc)
+//        from entry-point Netdata, average($cpu))
+//    then
+//        #actions
+//        System.out.println("Average CPU usage over 10%");
+//end
+//
+//rule "Average Memory over 1%"
+//    when
+//        #conditions
+//        Number ($memUsage : doubleValue, doubleValue > 1)
+//        from accumulate ( Netdata ($mem : memUsagePerc, $cpuUsage : cpuUsagePerc)
+//        from entry-point Netdata, average($mem))
+//    then
+//        #actions
+//        System.out.println("Average Memory usage over 1%");
+//end
+//
+//rule "CPU usage over 10% for the last 10 seconds"
+//    when
+//
+//end
+
+
+
+
+rule "CPU usage over 10% but memory still remaings low"
     when
-        #conditions
-        Number ($cpuUsage : doubleValue, doubleValue > 10)
-        from accumulate ( Netdata ($cpu : cpuUsagePerc, $memUsage : memUsagePerc)
-        from entry-point Netdata, average($cpu))
+        // conditions
+        $cpu : Netdata(cpuUsagePerc > 10, memUsagePerc < 1)
+        from entry-point Netdata
+
     then
-        #actions
-        System.out.println("Average CPU usage over 10%");
+        System.out.println("CPU intensive VM");
 end
 
-rule "Average Memory over 1%"
+rule "Memory usage over 10% but CPU still remaings low"
     when
-        #conditions
-        Number ($memUsage : doubleValue, doubleValue > 1)
-        from accumulate ( Netdata ($mem : memUsagePerc, $cpuUsage : cpuUsagePerc)
-        from entry-point Netdata, average($mem))
+        // conditions
+        $cpu : Netdata(memUsagePerc > 1, cpuUsagePerc < 10) from entry-point Netdata
     then
-        #actions
-        System.out.println("Average Memory usage over 1%");
+        System.out.println("Memory intensive VM");
 end
 
+rule "Memory usage over 1%"
+    salience -1
+    when
+        // conditions
+        $memory : Netdata(memUsagePerc > 5.43)
+        over window:time (10s)
+        from entry-point Netdata
+    then
+        // actions
+        System.out.println("Memory usage over 1%");
+end
+
+rule "CPU usage over 20%"
+    salience -1
+    when
+        // conditions
+        $cpu : Netdata(cpuUsagePerc > 12)
+        over window:time (10s)
+        from entry-point Netdata
+    then
+        System.out.println("CPU usage over 12%");
+end
+
+rule "Disk utilization over 1%"
+    salience -1
+    when
+        // conditions
+        $disk : Netdata(diskUtilPerc > 1)
+        over window:time (10s)
+        from entry-point Netdata
+    then
+        // actions
+        System.out.println("Disk utilization over 1%");
+end
+
+
+//rule "Average CPU over 10% for the last 10 seconds"
+//    when
+//        #conditions
+//        Number ($cpuUsage : doubleValue, doubleValue > 10)
+//        from accumulate ( Netdata ($cpu : cpuUsagePerc, $memUsage : memUsagePerc)
+//        from entry-point Netdata, average($cpu))
+//    then
+//        #actions
+//        System.out.println("Average CPU over 10% for the last 10 seconds");
+//end

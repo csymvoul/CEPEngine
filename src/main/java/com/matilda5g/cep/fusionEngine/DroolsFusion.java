@@ -13,6 +13,7 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.conf.ClockTypeOption;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 import org.drools.time.SessionPseudoClock;
+import org.drools.time.SessionClock;
 import org.json.JSONException;
 
 import java.io.*;
@@ -36,28 +37,30 @@ public class DroolsFusion {
         config.setOption(EventProcessingOption.STREAM);
 
         // KnowledgeBase: We created KnowledgeBase considering the connection of DRL files the KnowledgeBuilder has
-        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
-        kbase.addKnowledgePackages(kBuilder.getKnowledgePackages());
+        KnowledgeBase kBase = KnowledgeBaseFactory.newKnowledgeBase(config);
+        kBase.addKnowledgePackages(kBuilder.getKnowledgePackages());
 
         // Pseudo Clock Configuration
         KnowledgeSessionConfiguration conf = KnowledgeBaseFactory.newKnowledgeSessionConfiguration();
-        conf.setOption(ClockTypeOption.get("pseudo"));
+        conf.setOption(ClockTypeOption.get("realtime"));
 
 //        // StatefulKnowledgeSession: Once we have our KnowledgeBase we create a Session to use it
-        StatefulKnowledgeSession kSession = kbase.newStatefulKnowledgeSession();
+        StatefulKnowledgeSession kSession = kBase.newStatefulKnowledgeSession();
 
 //        // If we have the pseudo clock the above code turns into
-//        StatefulKnowledgeSession kSession = kbase.newStatefulKnowledgeSession(conf, null);
+//        StatefulKnowledgeSession kSession = kBase.newStatefulKnowledgeSession(conf, null);
 //        SessionPseudoClock clock = kSession.getSessionClock();
 
         // Create Netdata entry point
-        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointNetdata = kSession.getWorkingMemoryEntryPoint("Netdata");
+        WorkingMemoryEntryPoint netdataStream = kSession.getWorkingMemoryEntryPoint("Netdata");
 
 //        // Create another entry point TODO LIST
 //        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointStoreTwo = kSession.getWorkingMemoryEntryPoint("StoreTwo");
 
-        insertEvent(entryPointNetdata, netdata);
+        insertEvent(netdataStream, netdata);
+//        netdataStream.insert(netdata);
         kSession.fireAllRules();
+
         kSession.dispose();
         System.out.println();
 
