@@ -72,12 +72,23 @@ rule "CPU usage over 20%"
     salience -1
     when
         // conditions
-        $cpu : Netdata(cpuUsagePerc > 12)
-        over window:time (10s)
+        $cpu : Netdata(cpuUsagePerc > 10)
+//        over window:time (10s)
         from entry-point Netdata
     then
-        System.out.println("CPU usage over 12%");
+//        System.out.println("CPU usage over 10%");
+        $cpu.setCpuUsageRule();
 end
+
+//rule "CPU usage over 20% over time of 10 seconds"
+//    salience -1
+//    when
+//        // conditions
+//        $cpuTW : Netdata(cpuOverXPerc > 2)
+//        from entry-point Netdata
+//    then
+//        System.out.println("At least 10 events that the CPU usage is over 20%");
+//end
 
 rule "Disk utilization over 1%"
     salience -1

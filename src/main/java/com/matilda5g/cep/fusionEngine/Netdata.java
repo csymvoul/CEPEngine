@@ -37,6 +37,8 @@ public class Netdata {
     private double ipv4TcpConnsAbortsFailed;
     private double ipv4TcpConnsAbortsOnClose;
 
+    int cpuOverXPerc =0 ;
+
     public Netdata(JSONObject response) throws JSONException {
 
         //initialization of the Netdata object
@@ -80,9 +82,16 @@ public class Netdata {
                 , "TCPAbortOnClose");
 
 //        // print the inputs of the netdata object (debug)
-//        printNetdataData();
+        printNetdataData();
     }
 
+    public void setCpuUsageRule(){
+        cpuOverXPerc++;
+    }
+
+    public int getCpuUsageRule(){
+        return cpuOverXPerc;
+    }
     private double setDoubleValue(JSONArray json, String field) throws JSONException {
         return json
                 .getJSONObject(0)
@@ -139,31 +148,6 @@ public class Netdata {
 
         // return the available memory percentage
         return availDiskGb * 100 / totalDiskSize;
-    }
-
-    public void printNetdataData() {
-        System.out.println("*************************************");
-        System.out.println("this.timeStamp: " + this.timeStamp);
-        System.out.println("this.memUsagePerc: " + this.memUsagePerc);
-        System.out.println("this.cpuUsagePerc: " + this.cpuUsagePerc);
-        System.out.println("this.diskSizePerc: " + this.diskSizePerc);
-        System.out.println("this.diskUtilPerc: " + this.diskUtilPerc);
-        System.out.println("this.upTime: " + this.upTime);
-        System.out.println("this.ipv4PacketsReceived: " + this.ipv4PacketsReceived);
-        System.out.println("this.ipv4PacketsDelivered: " + this.ipv4PacketsDelivered);
-        System.out.println("this.ipv4PacketsForwarded: " + this.ipv4PacketsForwarded);
-        System.out.println("this.ipv4PacketsSent: " + this.ipv4PacketsSent);
-        System.out.println("this.ipv4RSKbpsReceived: " + this.ipv4RSKbpsReceived);
-        System.out.println("this.ipv4RSKbpsSent: " + this.ipv4RSKbpsSent);
-        System.out.println("this.ipv4TcpConnsOpenActive: " + this.ipv4TcpConnsOpenActive);
-        System.out.println("this.ipv4TcpConnsOpenPassive: " + this.ipv4TcpConnsOpenPassive);
-        System.out.println("this.ipv4TcpConnsAbortsOnTimeout: " + this.ipv4TcpConnsAbortsOnTimeout);
-        System.out.println("this.ipv4TcpConnsAbortsOnLinger: " + this.ipv4TcpConnsAbortsOnLinger);
-        System.out.println("this.ipv4TcpConnsAbortsOnBadData: " + this.ipv4TcpConnsAbortsOnBadData);
-        System.out.println("this.ipv4TcpConnsAbortsOnMemory: " + this.ipv4TcpConnsAbortsOnMemory);
-        System.out.println("this.ipv4TcpConnsAbortsFailed: " + this.ipv4TcpConnsAbortsFailed);
-        System.out.println("this.ipv4TcpConnsAbortsOnClose: " + this.ipv4TcpConnsAbortsOnClose);
-        System.out.println("*************************************");
     }
 
     public double getCpuUsagePerc() {
@@ -244,5 +228,30 @@ public class Netdata {
 
     public double getIpv4TcpConnsAbortsOnClose() {
         return this.ipv4TcpConnsAbortsOnClose;
+    }
+
+    public void printNetdataData() {
+        System.out.println("*************************************");
+        System.out.println("this.timeStamp: " + this.timeStamp);
+        System.out.println("this.memUsagePerc: " + this.memUsagePerc);
+        System.out.println("this.cpuUsagePerc: " + this.cpuUsagePerc);
+        System.out.println("this.diskSizePerc: " + this.diskSizePerc);
+        System.out.println("this.diskUtilPerc: " + this.diskUtilPerc);
+        System.out.println("this.upTime: " + this.upTime);
+        System.out.println("this.ipv4PacketsReceived: " + this.ipv4PacketsReceived);
+        System.out.println("this.ipv4PacketsDelivered: " + this.ipv4PacketsDelivered);
+        System.out.println("this.ipv4PacketsForwarded: " + this.ipv4PacketsForwarded);
+        System.out.println("this.ipv4PacketsSent: " + this.ipv4PacketsSent);
+        System.out.println("this.ipv4RSKbpsReceived: " + this.ipv4RSKbpsReceived);
+        System.out.println("this.ipv4RSKbpsSent: " + this.ipv4RSKbpsSent);
+        System.out.println("this.ipv4TcpConnsOpenActive: " + this.ipv4TcpConnsOpenActive);
+        System.out.println("this.ipv4TcpConnsOpenPassive: " + this.ipv4TcpConnsOpenPassive);
+        System.out.println("this.ipv4TcpConnsAbortsOnTimeout: " + this.ipv4TcpConnsAbortsOnTimeout);
+        System.out.println("this.ipv4TcpConnsAbortsOnLinger: " + this.ipv4TcpConnsAbortsOnLinger);
+        System.out.println("this.ipv4TcpConnsAbortsOnBadData: " + this.ipv4TcpConnsAbortsOnBadData);
+        System.out.println("this.ipv4TcpConnsAbortsOnMemory: " + this.ipv4TcpConnsAbortsOnMemory);
+        System.out.println("this.ipv4TcpConnsAbortsFailed: " + this.ipv4TcpConnsAbortsFailed);
+        System.out.println("this.ipv4TcpConnsAbortsOnClose: " + this.ipv4TcpConnsAbortsOnClose);
+        System.out.println("*************************************");
     }
 }
