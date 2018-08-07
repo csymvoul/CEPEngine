@@ -13,8 +13,9 @@ public class NetdataBucket {
         one, but when it drops that threshold, cpuCount turns back to zero. The rule for the CPU is fired only when
         the cpuCount is greater than, or equal to 2, meaning for the last 10 seconds.
 
-        The same goes by for memory, disk, etc. as well. 
+        The same goes by for memory, disk, etc. as well.
     */
+    // CPU usage related methods
     public void setCpuCount() {
         cpuCount++;
         System.out.println("Current cpuCount: " +  cpuCount);
@@ -29,6 +30,7 @@ public class NetdataBucket {
         return cpuCount;
     }
 
+    // Memory usage related methods
     public void setMemCount() {
         memCount++;
         System.out.println("Current memCount: " + memCount);
@@ -43,6 +45,7 @@ public class NetdataBucket {
         return memCount;
     }
 
+    // Disk utilization related methods
     public void setDiskCount() {
         diskCount++;
         System.out.println("Current memCount: " + diskCount);
