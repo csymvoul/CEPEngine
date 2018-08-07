@@ -30,12 +30,13 @@ public class StreamingData {
             URL obj = new URL(this.url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-            // optional, since the default method is GET
+            // Optional, since the default method is GET
             con.setRequestMethod("GET");
 
-            // the response code of the httpRequest (e.g. 400, 200, etc.)
+//            // The response code of the httpRequest (e.g. 400, 200, etc.)
 //            int responseCode = con.getResponseCode();
 //            System.out.println("\nSending 'GET' request to URL : " + url);
+
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;

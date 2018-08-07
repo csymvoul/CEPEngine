@@ -6,17 +6,17 @@ import org.json.JSONObject;
 
 public class Netdata {
     // Initialize input variables from netdata stream
-    // cpu usage percentage
+    // Cpu usage percentage
     private double cpuUsagePerc;
-    // memory usage percentage
+    // Memory usage percentage
     private double memUsagePerc;
-    // disk usage percentage
+    // Disk usage percentage
     private double diskUtilPerc;
-    // disk size percentage
+    // Disk size percentage
     private double diskSizePerc;
-    // timestamp of the incoming data
+    // Timestamp of the incoming data
     private long timeStamp;
-    // uptime in seconds
+    // Uptime in seconds
     private long upTime;
     // IPv4 packets received, sent, delivered and forwarded
     private double ipv4PacketsReceived;
@@ -26,7 +26,7 @@ public class Netdata {
     // IPv4 Kbps sent and received
     private double ipv4RSKbpsSent;
     private double ipv4RSKbpsReceived;
-    // open IPv4 TCP connections/s
+    // Open IPv4 TCP connections/s
     private double ipv4TcpConnsOpenActive;
     private double ipv4TcpConnsOpenPassive;
     // IPv4 TCP connections/s aborts
@@ -37,12 +37,9 @@ public class Netdata {
     private double ipv4TcpConnsAbortsFailed;
     private double ipv4TcpConnsAbortsOnClose;
 
-    // Variables used for the buckets of time-windows
-//    public int cpuOverCount = 0 ;
 
     public Netdata(JSONObject response) throws JSONException {
-
-        //initialization of the Netdata object
+        // Initialization of the Netdata object
         this.timeStamp = setTimeStamp(response.getJSONArray("memUsage"));
         this.memUsagePerc = setMemUsagePerc(response.getJSONArray("memUsage"));
         this.cpuUsagePerc = setCpuUsagePerc(response.getJSONArray("cpuUsage"));
@@ -82,7 +79,7 @@ public class Netdata {
         this.ipv4TcpConnsAbortsOnClose = setDoubleValue(response.getJSONArray("ipv4TcpConnsAborts")
                 , "TCPAbortOnClose");
 
-//        // print the inputs of the netdata object (debug)
+//        // Print the inputs of the netdata object (debug)
 //        printNetdataData();
 //        System.out.println(getCpuOverCount());
     }
@@ -111,37 +108,37 @@ public class Netdata {
 
     private double setMemUsagePerc(JSONArray memUsage) throws JSONException {
 
-        // get the data from the jsonArray
+        // Get the data from the jsonArray
         double cachedMem = setDoubleValue(memUsage, "cached");
         double bufferMem = setDoubleValue(memUsage, "buffers");
         double usedMem = setDoubleValue(memUsage, "used");
         double freeMem = setDoubleValue(memUsage, "free");
 
-        // get the total memory
+        // Get the total memory
         double totalMem = cachedMem + bufferMem + usedMem + freeMem;
-        // return the free memory percentage
+        // Return the free memory percentage
         return freeMem * 100 / totalMem;
     }
 
     private double setCpuUsagePerc(JSONArray cpuUsage) throws JSONException {
 
-        // get the data from the jsonArray
+        // Get the data from the jsonArray
         double idleCpuPerc = setDoubleValue(cpuUsage, "idle");
-        // return the cpu usage percentage
+        // Return the cpu usage percentage
         return 100-idleCpuPerc;
     }
 
     private double setDiskSizePerc(JSONArray diskSize) throws JSONException {
 
-        // get the data from the jsonArray
+        // Get the data from the jsonArray
         double availDiskGb = setDoubleValue(diskSize, "avail");
         double usedDiskGb = setDoubleValue(diskSize, "used");
         double reservedForRootDiskGb = setDoubleValue(diskSize, "reserved_for_root");
 
-        // get the total disk size
+        // Get the total disk size
         double totalDiskSize = availDiskGb + usedDiskGb + reservedForRootDiskGb;
 
-        // return the available memory percentage
+        // Return the available memory percentage
         return availDiskGb * 100 / totalDiskSize;
     }
 
@@ -226,7 +223,7 @@ public class Netdata {
     }
 
     public void printNetdataData() {
-        System.out.println("*************************************");
+        System.out.println("****************************************");
         System.out.println("this.timeStamp: " + this.timeStamp);
         System.out.println("this.memUsagePerc: " + this.memUsagePerc);
         System.out.println("this.cpuUsagePerc: " + this.cpuUsagePerc);
@@ -247,6 +244,6 @@ public class Netdata {
         System.out.println("this.ipv4TcpConnsAbortsOnMemory: " + this.ipv4TcpConnsAbortsOnMemory);
         System.out.println("this.ipv4TcpConnsAbortsFailed: " + this.ipv4TcpConnsAbortsFailed);
         System.out.println("this.ipv4TcpConnsAbortsOnClose: " + this.ipv4TcpConnsAbortsOnClose);
-        System.out.println("*************************************");
+        System.out.println("****************************************");
     }
 }

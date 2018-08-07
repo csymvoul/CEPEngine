@@ -13,22 +13,22 @@ public class HttpResponseListener {
         if (type == "PROM"){
             //todo list
         } else if (type == "NETDATA"){
-            // create netdata object passing netdataResponse JSON
+            // Create netdata object passing netdataResponse JSON
             Netdata netdata = createNetdataObject(httpResponse);
 
-//             //print netdata object (debug) to be sure I am retrieving it
+//            // Print netdata object (debug) to be sure I am retrieving it
 //            System.out.println("from HttpResponseListener.onResponse");
 //            netdata.printNetdataData();
 
-            // create DroolsFusion object
+            // Create DroolsFusion object
             DroolsFusion df = new DroolsFusion();
-            // set path of the rules file
+            // Set path of the rules file
             df.setRulesFilePath("rules/rules.drl");
             String rulesFilePath = df.getRulesFile().getPath();
-            // call droolsFusion method to initialize the cep process
+            // Call droolsFusion method to initialize the cep process
             df.droolsFusionSession(netdata);
 
-//            // print rules file (debug) to be sure that I am getting it
+//            // Print rules file (debug) to be sure that I am getting it
 //            df.printRules(rulesFilePath);
         }
     }
