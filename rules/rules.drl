@@ -8,6 +8,11 @@ declare Netdata
     @role( event )
 end
 
+declare NetdataBucket
+    @role( event )
+end
+
+
 //rule "Average CPU over 10%"
 //    when
 //        #conditions
@@ -18,7 +23,7 @@ end
 //        #actions
 //        System.out.println("Average CPU usage over 10%");
 //end
-//
+
 //rule "Average Memory over 1%"
 //    when
 //        #conditions
@@ -29,87 +34,113 @@ end
 //        #actions
 //        System.out.println("Average Memory usage over 1%");
 //end
-//
-//rule "CPU usage over 10% for the last 10 seconds"
+
+//rule "CPU usage over 10% but memory still remaings low"
 //    when
-//
+//        // conditions
+//        $cpu : Netdata(cpuUsagePerc > 10, memUsagePerc < 1)
+//        from entry-point Netdata
+//    then
+//        System.out.println("CPU intensive VM");
 //end
 
+//rule "Memory usage over 10% but CPU still remaings low"
+//    when
+//        // conditions
+//        $cpu : Netdata(memUsagePerc > 1, cpuUsagePerc < 10) from entry-point Netdata
+//    then
+//        System.out.println("Memory intensive VM");
+//end
 
-
-
-rule "CPU usage over 10% but memory still remaings low"
-    when
-        // conditions
-        $cpu : Netdata(cpuUsagePerc > 10, memUsagePerc < 1)
-        from entry-point Netdata
-
-    then
-        System.out.println("CPU intensive VM");
-end
-
-rule "Memory usage over 10% but CPU still remaings low"
-    when
-        // conditions
-        $cpu : Netdata(memUsagePerc > 1, cpuUsagePerc < 10) from entry-point Netdata
-    then
-        System.out.println("Memory intensive VM");
-end
-
-rule "Memory usage over 1%"
-    salience -1
-    when
-        // conditions
-        $memory : Netdata(memUsagePerc > 5.43)
-        over window:time (10s)
-        from entry-point Netdata
-    then
-        // actions
-        System.out.println("Memory usage over 1%");
-end
-
-rule "CPU usage over 20%"
-    salience -1
-    when
-        // conditions
-        $cpu : Netdata(cpuUsagePerc > 10)
-//        over window:time (10s)
-        from entry-point Netdata
-    then
-//        System.out.println("CPU usage over 10%");
-        $cpu.setCpuUsageRule();
-end
-
-//rule "CPU usage over 20% over time of 10 seconds"
+//rule "Memory usage over 1%"
 //    salience -1
 //    when
 //        // conditions
-//        $cpuTW : Netdata(cpuOverXPerc > 2)
+//        $memory : Netdata(memUsagePerc > 5.43)
+//        over window:time (10s)
 //        from entry-point Netdata
 //    then
-//        System.out.println("At least 10 events that the CPU usage is over 20%");
+//        // actions
+//        System.out.println("Memory usage over 1%");
 //end
 
-rule "Disk utilization over 1%"
-    salience -1
+// CPU usage related rules
+rule "CPU usage over 20% once"
     when
-        // conditions
-        $disk : Netdata(diskUtilPerc > 1)
-        over window:time (10s)
-        from entry-point Netdata
+        $cpu : Netdata(cpuUsagePerc > 20) from entry-point Netdata
+        $count : NetdataBucket(cpuCount >= 0) from entry-point NetdataBucket
     then
-        // actions
-        System.out.println("Disk utilization over 1%");
+        System.out.println("CPU usage is now over 20%");
+        $count.setCpuCount();
 end
 
+rule "CPU usage less than 20% once"
+    when
+        $cpu : Netdata(cpuUsagePerc < 20) from entry-point Netdata
+        $count : NetdataBucket(cpuCount >= 0) from entry-point NetdataBucket
+    then
+        System.out.println("CPU usage is now less than 20%");
+        $count.setCpuCountToZero();
+end
 
-//rule "Average CPU over 10% for the last 10 seconds"
-//    when
-//        #conditions
-//        Number ($cpuUsage : doubleValue, doubleValue > 10)
-//        from accumulate ( Netdata ($cpu : cpuUsagePerc, $memUsage : memUsagePerc)
-//        from entry-point Netdata, average($cpu))
-//    then
-//        #actions
-//        System.out.println("Average CPU over 10% for the last 10 seconds");
-//end
+rule "CPU usage over 20% over time of 10 seconds"
+    salience 1
+    when
+        $cpuTW : NetdataBucket(cpuCount >= 2) from entry-point NetdataBucket
+    then
+        System.out.println("ALERT: CPU usage is over 10% for the last 10 seconds");
+end
+
+// Memory usage related rules
+rule "Memory usage over 5% once"
+    when
+        $cpu : Netdata(memUsagePerc > 5) from entry-point Netdata
+        $count : NetdataBucket(memCount >= 0) from entry-point NetdataBucket
+    then
+        System.out.println("Memory usage is now over 5%");
+        $count.setMemCount();
+end
+
+rule "Memory usage less than 1% once"
+    when
+        $cpu : Netdata(memUsagePerc < 5) from entry-point Netdata
+        $count : NetdataBucket(memCount >= 0) from entry-point NetdataBucket
+    then
+        System.out.println("Memory usage is now less than 5%");
+        $count.setMemCountToZero();
+end
+
+rule "Memory usage over 5% over time of 20 seconds"
+    salience 1
+    when
+        $memTW : NetdataBucket(memCount >= 4) from entry-point NetdataBucket
+    then
+        System.out.println("ALERT: Memory usage is over 5% for the last 20 seconds");
+end
+
+// Disk utilization related rules
+rule "Disk usage over 1% once"
+    when
+        $disk : Netdata(diskUtilPerc > 1) from entry-point Netdata
+        $count : NetdataBucket(diskCount >= 0) from entry-point NetdataBucket
+    then
+        System.out.println("Disk usage is now over 1%");
+        $count.setDiskCount();
+end
+
+rule "Disk usage less than 1% once"
+    when
+        $disk : Netdata(diskUtilPerc < 1) from entry-point Netdata
+        $count : NetdataBucket(diskCount >= 0) from entry-point NetdataBucket
+    then
+        System.out.println("Disk usage is now less than 1%");
+        $count.setDiskCountToZero();
+end
+
+rule "Disk usage over 5% over time of 20 seconds"
+    salience 1
+    when
+        $diskTW : NetdataBucket(diskCount >= 4) from entry-point NetdataBucket
+    then
+        System.out.println("ALERT: Disk usage is over 5% for the last 20 seconds");
+end

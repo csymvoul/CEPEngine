@@ -37,7 +37,8 @@ public class Netdata {
     private double ipv4TcpConnsAbortsFailed;
     private double ipv4TcpConnsAbortsOnClose;
 
-    int cpuOverXPerc =0 ;
+    // Variables used for the buckets of time-windows
+//    public int cpuOverCount = 0 ;
 
     public Netdata(JSONObject response) throws JSONException {
 
@@ -82,16 +83,10 @@ public class Netdata {
                 , "TCPAbortOnClose");
 
 //        // print the inputs of the netdata object (debug)
-        printNetdataData();
+//        printNetdataData();
+//        System.out.println(getCpuOverCount());
     }
 
-    public void setCpuUsageRule(){
-        cpuOverXPerc++;
-    }
-
-    public int getCpuUsageRule(){
-        return cpuOverXPerc;
-    }
     private double setDoubleValue(JSONArray json, String field) throws JSONException {
         return json
                 .getJSONObject(0)

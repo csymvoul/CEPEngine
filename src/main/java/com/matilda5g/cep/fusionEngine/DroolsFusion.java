@@ -53,11 +53,12 @@ public class DroolsFusion {
 
         // Create Netdata entry point
         WorkingMemoryEntryPoint netdataStream = kSession.getWorkingMemoryEntryPoint("Netdata");
-
-//        // Create another entry point TODO LIST
-//        org.drools.runtime.rule.WorkingMemoryEntryPoint entryPointStoreTwo = kSession.getWorkingMemoryEntryPoint("StoreTwo");
-
         insertEvent(netdataStream, netdata);
+
+        NetdataBucket netdataBucketObj = new NetdataBucket();
+        // Create NetdataBucket entry point
+        WorkingMemoryEntryPoint netdataBucket = kSession.getWorkingMemoryEntryPoint("NetdataBucket");
+        netdataBucket.insert(netdataBucketObj);
 //        netdataStream.insert(netdata);
         kSession.fireAllRules();
 
