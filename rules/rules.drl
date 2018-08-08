@@ -40,6 +40,7 @@ rule "CPU usage over 20% over time of Χ seconds (at least 10 seconds)"
         System.out.println("ALERT: CPU usage is over 15% for the last " + $cpuTW.getCpuCount()*5 + " seconds");
 end
 
+
 // Memory usage related rules
 rule "Memory usage over 5% once"
     when
@@ -67,6 +68,7 @@ rule "Memory usage over 5% over time of X seconds (at least 20 seconds)"
         System.out.println("ALERT: Memory usage is over 5% for the last " + $memTW.getMemCount()*5 + " seconds");
 end
 
+
 // Disk utilization related rules
 rule "Disk usage over 1% once"
     when
@@ -93,6 +95,7 @@ rule "Disk usage over 5% over time of X seconds (at least 20 seconds)"
     then
         System.out.println("ALERT: Disk utilization is over 5% for the last " + 5*$diskTW.getDiskCount() +" seconds");
 end
+
 
 // IPv4 sent/received KB related rules
 rule "IPv4 receiving KB threshold exceeded"
