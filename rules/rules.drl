@@ -100,14 +100,15 @@ end
 // IPv4 sent/received KB related rules
 rule "IPv4 receiving KB threshold exceeded"
     when
-        $ipv4 : Netdata(ipv4RSKbpsReceived > 1) from entry-point Netdata
+        $ipv4 : Netdata(ipv4RSKbpsReceived > 220) from entry-point Netdata
     then
         System.out.println("IPv4 received Kbps threshold exceeded. Now receiving: " + $ipv4.getIpv4RSKbpsReceived() + " Kbps/s");
 end
 
 rule "IPv4 sent KB threshold exceeded"
     when
-        $ipv4 : Netdata(ipv4RSKbpsSent > 1) from entry-point Netdata
+        $ipv4 : Netdata(ipv4RSKbpsSent > 220) from entry-point Netdata
     then
         System.out.println("IPv4 sent Kbps threshold exceeded. Now sending: " + $ipv4.getIpv4RSKbpsSent() + " Kbps/s");
 end
+
