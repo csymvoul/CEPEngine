@@ -109,3 +109,5 @@ rule "Application component down"
     then
         System.out.println("ALERT: Application component down!");
 end
+
+// TODO list: add rules regarding low use of resources (cpu, memory, disk, etc.)
