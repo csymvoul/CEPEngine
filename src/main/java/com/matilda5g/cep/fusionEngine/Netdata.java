@@ -80,7 +80,7 @@ public class Netdata {
                 , "TCPAbortOnClose");
 
 //        // Print the inputs of the netdata object (debug)
-        printNetdataData();
+//        printNetdataData();
 //        System.out.println(getCpuOverCount());
     }
 

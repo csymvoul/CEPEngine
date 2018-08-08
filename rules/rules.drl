@@ -22,7 +22,6 @@ rule "CPU usage over 20% once"
         System.out.println("CPU usage is now over 15%");
         $count.setCpuCount();
 end
-
 rule "CPU usage less than 20% once"
     when
         $cpu : Netdata(cpuUsagePerc < 15) from entry-point Netdata
@@ -31,7 +30,6 @@ rule "CPU usage less than 20% once"
         System.out.println("CPU usage is now less than 15%");
         $count.setCpuCountToZero();
 end
-
 rule "CPU usage over 20% over time of Χ seconds (at least 10 seconds)"
     salience 1
     when
@@ -39,7 +37,6 @@ rule "CPU usage over 20% over time of Χ seconds (at least 10 seconds)"
     then
         System.out.println("ALERT: CPU usage is over 15% for the last " + $cpuTW.getCpuCount()*5 + " seconds");
 end
-
 
 // Memory usage related rules
 rule "Memory usage over 5% once"
@@ -50,7 +47,6 @@ rule "Memory usage over 5% once"
         System.out.println("Memory usage is now over 5%");
         $count.setMemCount();
 end
-
 rule "Memory usage less than 5% once"
     when
         $cpu : Netdata(memUsagePerc < 5) from entry-point Netdata
@@ -59,7 +55,6 @@ rule "Memory usage less than 5% once"
         System.out.println("Memory usage is now less than 5%");
         $count.setMemCountToZero();
 end
-
 rule "Memory usage over 5% over time of X seconds (at least 20 seconds)"
     salience 1
     when
@@ -67,7 +62,6 @@ rule "Memory usage over 5% over time of X seconds (at least 20 seconds)"
     then
         System.out.println("ALERT: Memory usage is over 5% for the last " + $memTW.getMemCount()*5 + " seconds");
 end
-
 
 // Disk utilization related rules
 rule "Disk usage over 1% once"
@@ -78,7 +72,6 @@ rule "Disk usage over 1% once"
         System.out.println("Disk utilization is now over 1%");
         $count.setDiskCount();
 end
-
 rule "Disk usage less than 1% once"
     when
         $disk : Netdata(diskUtilPerc < 1) from entry-point Netdata
@@ -87,7 +80,6 @@ rule "Disk usage less than 1% once"
         System.out.println("Disk utilization is now less than 1%");
         $count.setDiskCountToZero();
 end
-
 rule "Disk usage over 5% over time of X seconds (at least 20 seconds)"
     salience 1
     when
@@ -96,7 +88,6 @@ rule "Disk usage over 5% over time of X seconds (at least 20 seconds)"
         System.out.println("ALERT: Disk utilization is over 5% for the last " + 5*$diskTW.getDiskCount() +" seconds");
 end
 
-
 // IPv4 sent/received KB related rules
 rule "IPv4 receiving KB threshold exceeded"
     when
@@ -104,7 +95,6 @@ rule "IPv4 receiving KB threshold exceeded"
     then
         System.out.println("IPv4 received Kbps threshold exceeded. Now receiving: " + $ipv4.getIpv4RSKbpsReceived() + " Kbps/s");
 end
-
 rule "IPv4 sent KB threshold exceeded"
     when
         $ipv4 : Netdata(ipv4RSKbpsSent > 220) from entry-point Netdata
@@ -112,3 +102,10 @@ rule "IPv4 sent KB threshold exceeded"
         System.out.println("IPv4 sent Kbps threshold exceeded. Now sending: " + $ipv4.getIpv4RSKbpsSent() + " Kbps/s");
 end
 
+// Uptime related rules
+rule "Application component down"
+    when
+        $uptime : Netdata(upTime > 50, upTime < 150) from entry-point Netdata
+    then
+        System.out.println("ALERT: Application component down!");
+end
