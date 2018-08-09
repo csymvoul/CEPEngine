@@ -8,7 +8,6 @@ import com.matilda5g.cep.fusionEngine.NetdataBucket;
 declare Netdata
     @role( event )
 end
-
 declare NetdataBucket
     @role( event )
 end
