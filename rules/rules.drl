@@ -19,7 +19,7 @@ rule "CPU usage over 15% once"
         $countOver : NetdataBucket(cpuCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(cpuCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("CPU usage is now over 15%");
+//        System.out.println("CPU usage is now over 15%");
         $countOver.setCpuCountOver();
         $countLess.setCpuCountLowToZero();
 end
@@ -29,7 +29,7 @@ rule "CPU usage less than 15% once"
         $countOver : NetdataBucket(cpuCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(cpuCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("CPU usage is now less than 15%");
+//        System.out.println("CPU usage is now less than 15%");
         $countOver.setCpuCountOverToZero();
         $countLess.setCpuCountLow();
 end
@@ -48,7 +48,7 @@ rule "Memory usage over 5% once"
         $countOver : NetdataBucket(memCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(memCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("Memory usage is now over 5%");
+//        System.out.println("Memory usage is now over 5%");
         $countOver.setMemCountOver();
         $countLess.setMemCountLowToZero();
 end
@@ -58,7 +58,7 @@ rule "Memory usage less than 5% once"
         $countOver : NetdataBucket(memCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(memCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("Memory usage is now less than 5%");
+//        System.out.println("Memory usage is now less than 5%");
         $countOver.setMemCountOverToZero();
         $countLess.setMemCountLow();
 end
@@ -77,7 +77,7 @@ rule "Disk usage over 1% once"
         $countOver : NetdataBucket(diskCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(diskCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("Disk utilization is now over 1%");
+//        System.out.println("Disk utilization is now over 1%");
         $countOver.setDiskCountOver();
         $countLess.setDiskCountLowToZero();
 end
@@ -87,7 +87,7 @@ rule "Disk usage less than 1% once"
         $countOver : NetdataBucket(diskCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(diskCountLow >= 0) from entry-point NetdataBucket
     then
-        System.out.println("Disk utilization is now less than 1%");
+//        System.out.println("Disk utilization is now less than 1%");
         $countOver.setDiskCountOverToZero();
         $countLess.setDiskCountLow();
 end
