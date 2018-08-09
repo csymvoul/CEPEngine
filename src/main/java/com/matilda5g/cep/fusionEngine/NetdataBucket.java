@@ -1,9 +1,7 @@
 package com.matilda5g.cep.fusionEngine;
 
 public class NetdataBucket {
-    public static int cpuCount = 0;
-    public static int memCount = 0;
-    public static int diskCount = 0;
+
     /*
         This NetdataBucket class is used in Drools Fusion to identify whether one or more attributes of the system
         (e.g. CPU usage, Memory usage, Disk utilization, etc.) exceed a specified threshold as shown in the rules
@@ -15,49 +13,106 @@ public class NetdataBucket {
 
         The same goes by for memory, disk, etc. as well.
     */
+
+    public static int cpuCountOver = 0;
+    public static int cpuCountLow = 0;
+    public static int memCountOver = 0;
+    public static int memCountLow = 0;
+    public static int diskCountOver = 0;
+    public static int diskCountLow = 0;
+
     // CPU usage related methods
-    public void setCpuCount() {
-        cpuCount++;
-        System.out.println("Current cpuCount: " +  cpuCount);
+    // Great CPU Usage
+    public void setCpuCountOver() {
+        cpuCountOver++;
+        System.out.println("Current cpuCountOver: " +  cpuCountOver);
     }
 
-    public void setCpuCountToZero() {
-        cpuCount=0;
-        System.out.println("Current cpuCount: " +  cpuCount);
+    public int getCpuCountOver() {
+        return cpuCountOver;
     }
 
-    public int getCpuCount() {
-        return cpuCount;
+    public void setCpuCountOverToZero() {
+        cpuCountOver=0;
+        System.out.println("Current cpuCountOver: " +  cpuCountOver);
+    }
+
+    // Low CPU Usage
+    public void setCpuCountLow() {
+        cpuCountLow++;
+        System.out.println("Current cpuCountLow: " +  cpuCountLow);
+    }
+
+    public int getCpuCountLow() {
+        return cpuCountLow;
+    }
+
+    public void setCpuCountLowToZero() {
+        cpuCountLow=0;
+        System.out.println("Current cpuCountLow: " +  cpuCountLow);
     }
 
     // Memory usage related methods
-    public void setMemCount() {
-        memCount++;
-        System.out.println("Current memCount: " + memCount);
+    // Great Memory Usage
+    public void setMemCountOver() {
+        memCountOver++;
+        System.out.println("Current memCountOver: " + memCountOver);
     }
 
-    public void setMemCountToZero() {
-        memCount=0;
-        System.out.println("Current memCount: " + memCount);
+    public void setMemCountOverToZero() {
+        memCountOver=0;
+        System.out.println("Current memCountOver: " + memCountOver);
     }
 
-    public int getMemCount() {
-        return memCount;
+    public int getMemCountOver() {
+        return memCountOver;
     }
+
+    //Low Memory Usage
+    public void setMemCountLow() {
+        memCountLow++;
+        System.out.println("Current memCountLow: " + memCountLow);
+    }
+
+    public void setMemCountLowToZero() {
+        memCountLow=0;
+        System.out.println("Current memCountLow: " + memCountLow);
+    }
+
+    public int getMemCountLow() {
+        return memCountLow;
+    }
+
 
     // Disk utilization related methods
-    public void setDiskCount() {
-        diskCount++;
-        System.out.println("Current memCount: " + diskCount);
+    // Great Disk utilization
+    public void setDiskCountOver() {
+        diskCountOver++;
+        System.out.println("Current diskCountOver: " + diskCountOver);
     }
 
-    public void setDiskCountToZero() {
-        diskCount=0;
-        System.out.println("Current memCount: " + diskCount);
+    public void setDiskCountOverToZero() {
+        diskCountOver=0;
+        System.out.println("Current diskCountOver: " + diskCountOver);
     }
 
-    public int getDiskCount() {
-        return diskCount;
+    public int getDiskCountOver() {
+        return diskCountOver;
+    }
+
+    // Low Disk utilization
+    public void setDiskCountLow() {
+        diskCountLow++;
+        System.out.println("Current diskCountLow: " + diskCountLow);
+    }
+
+    public void setDiskCountLowToZero() {
+        diskCountLow=0;
+        System.out.println("Current diskCountLow: " + diskCountLow);
+    }
+
+    public int getDiskCountLow() {
+        return diskCountLow;
     }
 
 }
