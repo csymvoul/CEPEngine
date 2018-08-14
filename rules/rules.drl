@@ -15,11 +15,11 @@ end
 // CPU usage related rules
 rule "CPU usage over 15% once"
     when
-        $cpu : Netdata(cpuUsagePerc > 15) from entry-point Netdata
+        $cpu : Netdata(cpuUsagePerc >= 15) from entry-point Netdata
         $countOver : NetdataBucket(cpuCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(cpuCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("CPU usage is now over 15%");
+//        System.out.println("CPU usage is now over 15%. Currently using (%): " + $cpu.getCpuUsagePerc());
         $countOver.setCpuCountOver();
         $countLess.setCpuCountLowToZero();
 end
@@ -29,7 +29,7 @@ rule "CPU usage less than 15% once"
         $countOver : NetdataBucket(cpuCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(cpuCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("CPU usage is now less than 15%");
+//        System.out.println("CPU usage is now less than 15%. Currently using (%): " + $cpu.getCpuUsagePerc());
         $countOver.setCpuCountOverToZero();
         $countLess.setCpuCountLow();
 end
@@ -37,47 +37,51 @@ rule "CPU usage over 15% over time of X seconds (at least 10 seconds)"
     salience 1
     when
         $cpuOverTW : NetdataBucket(cpuCountOver >= 2) from entry-point NetdataBucket
+        $cpu : Netdata (cpuUsagePerc > 0) from entry-point Netdata
     then
-        System.out.println("ALERT: CPU usage is over 15% for the last " + $cpuOverTW.getCpuCountOver()*5 + " seconds");
+        System.out.println("ALERT: CPU usage is over 15% for the last " + $cpuOverTW.getCpuCountOver()*5 + " seconds. " +
+         "Currently using: (%)" + $cpu.getCpuUsagePerc());
 end
 
 // Memory usage related rules
 rule "Memory usage over 5% once"
     when
-        $cpu : Netdata(memUsagePerc > 5) from entry-point Netdata
+        $mem : Netdata(memUsagePerc >= 5) from entry-point Netdata
         $countOver : NetdataBucket(memCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(memCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("Memory usage is now over 5%");
+//        System.out.println("Memory usage is now over 5%. Currently using (%): " + $mem.getMemUsagePerc());
         $countOver.setMemCountOver();
         $countLess.setMemCountLowToZero();
 end
 rule "Memory usage less than 5% once"
     when
-        $cpu : Netdata(memUsagePerc < 5) from entry-point Netdata
+        $mem : Netdata(memUsagePerc < 5) from entry-point Netdata
         $countOver : NetdataBucket(memCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(memCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("Memory usage is now less than 5%");
+//        System.out.println("Memory usage is now less than 5%. Currently using (%): " + $mem.getMemUsagePerc());
         $countOver.setMemCountOverToZero();
         $countLess.setMemCountLow();
 end
 rule "Memory usage over 5% over time of X seconds (at least 20 seconds)"
     salience 1
     when
+        $mem : Netdata (memUsagePerc > 0) from entry-point Netdata
         $memOverTW : NetdataBucket(memCountOver >= 4) from entry-point NetdataBucket
     then
-        System.out.println("ALERT: Memory usage is over 5% for the last " + $memOverTW.getMemCountOver()*5 + " seconds");
+        System.out.println("ALERT: Memory usage is over 5% for the last " + $memOverTW.getMemCountOver()*5 + " seconds. "
+         +"Currently using (%): " + $mem.getMemUsagePerc());
 end
 
 // Disk utilization related rules
 rule "Disk usage over 1% once"
     when
-        $disk : Netdata(diskUtilPerc > 1) from entry-point Netdata
+        $disk : Netdata(diskUtilPerc >= 1) from entry-point Netdata
         $countOver : NetdataBucket(diskCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(diskCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("Disk utilization is now over 1%");
+//        System.out.println("Disk utilization is now over 1%. Currently using (%):"  + $disk.getDiskUtilPerc());
         $countOver.setDiskCountOver();
         $countLess.setDiskCountLowToZero();
 end
@@ -87,36 +91,38 @@ rule "Disk usage less than 1% once"
         $countOver : NetdataBucket(diskCountOver >= 0) from entry-point NetdataBucket
         $countLess : NetdataBucket(diskCountLow >= 0) from entry-point NetdataBucket
     then
-//        System.out.println("Disk utilization is now less than 1%");
+//        System.out.println("Disk utilization is now less than 1%. Currently using (%):"  + $disk.getDiskUtilPerc());
         $countOver.setDiskCountOverToZero();
         $countLess.setDiskCountLow();
 end
 rule "Disk usage over 1% over time of X seconds (at least 20 seconds)"
     salience 1
     when
+        $disk : Netdata( diskUtilPerc > 0) from entry-point Netdata
         $diskOverTW : NetdataBucket(diskCountOver >= 4) from entry-point NetdataBucket
     then
-        System.out.println("ALERT: Disk utilization is over 1% for the last " + 5*$diskOverTW.getDiskCountOver() +" seconds");
+        System.out.println("ALERT: Disk utilization is over 1% for the last " + 5*$diskOverTW.getDiskCountOver() +
+        " seconds. Currently using (%):"  + $disk.getDiskUtilPerc());
 end
 
 // IPv4 sent/received KB related rules
 rule "IPv4 receiving KB threshold exceeded"
     when
-        $ipv4 : Netdata(ipv4RSKbpsReceived > 220) from entry-point Netdata
+        $ipv4 : Netdata(ipv4RSKbpsReceived >= 350) from entry-point Netdata
     then
-        System.out.println("IPv4 received Kbps threshold exceeded. Now receiving: " + $ipv4.getIpv4RSKbpsReceived() + " Kbps/s");
+        System.out.println("IPv4 received Kbps threshold exceeded (350 Kbps). Now receiving: " + $ipv4.getIpv4RSKbpsReceived() + " Kbps/s");
 end
 rule "IPv4 sent KB threshold exceeded"
     when
-        $ipv4 : Netdata(ipv4RSKbpsSent > 220) from entry-point Netdata
+        $ipv4 : Netdata(ipv4RSKbpsSent >= 350) from entry-point Netdata
     then
-        System.out.println("IPv4 sent Kbps threshold exceeded. Now sending: " + $ipv4.getIpv4RSKbpsSent() + " Kbps/s");
+        System.out.println("IPv4 sent Kbps threshold exceeded (350 Kbps). Now sending: " + $ipv4.getIpv4RSKbpsSent() + " Kbps/s");
 end
 
 // Uptime related rules
 rule "Application component down"
     when
-        $uptime : Netdata(upTime > 50, upTime < 150) from entry-point Netdata
+        $uptime : Netdata(upTime >50, upTime < 300) from entry-point Netdata
     then
         System.out.println("ALERT: Application component down!");
 end
@@ -125,21 +131,27 @@ end
 rule "CPU usage less than 15% over time of X seconds (at least 10 seconds)"
     salience 1
     when
+        $cpu : Netdata (cpuUsagePerc >=0 )
         $cpuLowTW : NetdataBucket(cpuCountLow >= 2) from entry-point NetdataBucket
     then
-        System.out.println("ALERT: CPU usage is less than 15% for the last " + $cpuLowTW.getCpuCountLow()*5 + " seconds");
+        System.out.println("UNNEEDED RESOURCES ALERT: CPU usage is less than 15% for the last " + $cpuLowTW.getCpuCountLow()*5 +
+        " seconds. Currently using (%):"  + $cpu.getCpuUsagePerc());
 end
 rule "Memory usage less than 5% over time of X seconds (at least 10 seconds)"
     salience 1
     when
+        $mem : Netdata (memUsagePerc >= 0) from entry-point Netdata
         $memLowTW : NetdataBucket(memCountLow >= 2) from entry-point NetdataBucket
     then
-        System.out.println("ALERT: Memory usage is less than 5% for the last " + $memLowTW.getMemCountLow()*5 + " seconds");
+        System.out.println("UNNEEDED RESOURCES ALERT: Memory usage is less than 5% for the last " + $memLowTW.getMemCountLow()*5 +
+        " seconds. Currently using (%):"  + $mem.getMemUsagePerc());
 end
 rule "Disk usage less than 5% over time of X seconds (at least 10 seconds)"
     salience 1
     when
+        $disk : Netdata(diskUtilPerc >= 0) from entry-point Netdata
         $diskLowTW : NetdataBucket(diskCountLow >= 2) from entry-point NetdataBucket
     then
-        System.out.println("ALERT: Disk usage is less than 1% for the last " + $diskLowTW.getDiskCountLow()*5 + " seconds");
+        System.out.println("UNNEEDED RESOURCES ALERT: Disk usage is less than 1% for the last " + $diskLowTW.getDiskCountLow()*5 +
+        " seconds. Currently using (%):"  + $disk.getDiskUtilPerc());
 end
